@@ -2,7 +2,7 @@
 %  STEP 0: Here we provide the relevant parameters values that will
 %  allow your sparse autoencoder to get good filters; 
 % inputSize  = 28 * 28;
-inputSize  = 25*25;
+inputSize  = 19*25;
 numLabels  = 5;
 hiddenSize = 200;
 sparsityParam = 0.1; % desired average activation of the hidden units.

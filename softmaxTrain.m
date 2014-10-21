@@ -7,7 +7,7 @@ function out = softmaxTrain(X,labels,lambda)
   opt = struct;
   opt.Method = 'lbfgs';
   opt.useMex = 0;
-  opt.maxIter = 100;
+  opt.maxIter = 140;
   [x, fvec, info, output] = minFunc(@(t) soft_cost(X,ym,lambda,t),theta(:),opt);
   out = reshape(x,numel(x)/size(ym,2),size(ym,2));
   
