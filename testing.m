@@ -2,7 +2,7 @@
 %  STEP 0: Here we provide the relevant parameters values that will
 %  allow your sparse autoencoder to get good filters; 
 % inputSize  = 28 * 28;
-inputSize  = 25*25;
+inputSize  = 5*5;
 numLabels  = 5;
 hiddenSize = 200;
 sparsityParam = 0.1; % desired average activation of the hidden units.
@@ -44,6 +44,9 @@ trainLabels = mnistLabels(trainSet)' + 1; % Shift Labels to the Range 1-5
 testData   = mnistData(testSet,:);
 testLabels = mnistLabels(testSet)' + 1;   % Shift Labels to the Range 1-5
 
+
+addpath svm/
+% svmtrain....;
 
 
 %% ======================================================================

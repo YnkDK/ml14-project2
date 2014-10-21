@@ -1,4 +1,6 @@
 auTrain.mat
 minFunc/*
 minFunc/logistic/*
+*.dll
+*.exe
 *.mexa64
