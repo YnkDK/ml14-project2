@@ -1,40 +1,92 @@
-function out = genData(data, labels, newSize)
-    out = data;
+function [newData, newLabel] = genData(data, labels, newSize)
+    
     % Figure out how much new data needed
     needed = newSize - length(data);
     if(needed < 0)
-        out = data;
+        newData = data;
+        newLabel = labels;
         warning('data size (%d) smaller than new size (%d), returning input data', length(data), newSize);
         return;
     end
+    tmp = data;
+    newLabel = labels;
     % Try to distribute the new data, such that the count
     % of each label is (almost) equal
     [count,label] = hist(labels, unique(labels));
     distribution = getDist(count, length(label), needed);
-
     for i = 1:length(label)
-        newData = genDataForLabel(distribution(i), data(labels(:) == i, :))
+        if(distribution(i) == 0)
+            continue;
+        end
+        newData = genDataForLabel(distribution(i), data(labels(:) == (i-1), :));
+        tmp = [tmp ; newData];
+        newLabel = [newLabel ; repmat(label(i), distribution(i), 1)];
     end
-    disp(label);
-    disp(distribution);
-    disp(sum(distribution + count));
-
+    subplot(1,2,1), imshow(reshape(tmp(10000, :), 28, 28))
+    subplot(1,2,2), imshow(reshape(tmp(10001, :), 28, 28));
+    newData = tmp;
 end
 
 function res = genDataForLabel(newData, data)
-    % Example
-    tmp = data(1, :);
-    tmp = reshape(tmp, 28, 28);
-    tmp = imrotate(tmp, 45, 'crop');
-    imshow(tmp);
-    res = tmp;
-    input('click to see next');
+    % Initialize the random number generator
+    rng(0,'twister');
+    
+    res = zeros(newData, size(data, 2));
+    % We have 6 image manipulators
+    % Calculate how many each should generate
+    num = floor(newData / 4);
+    
     % noise
+    for i = 1:num
+        % Pick a random row
+        rowIdx = ceil(rand * size(data,1));
+        % Reshape it to an 28x28 image
+        tmp = reshape(data(rowIdx, :), 28, 28);
+        % Add noise and shape it back again
+        res(i, :) = reshape(imnoise(tmp, 'localvar', tmp), 1, 784);
+    end
     % rotate
+    for i = 1:num
+        % Pick a random row
+        rowIdx = ceil(rand * size(data,1));
+        % Reshape it to an 28x28 image
+        tmp = reshape(data(rowIdx, :), 28, 28);
+        % Pick an angle between -40 and 40 degrees
+        deg = 80 * rand - 40;
+        % Add rotate and shape it back again
+        res(i + num, :) = reshape(imrotate(tmp, deg, 'bilinear', 'crop'), 1, 784);
+    end
     % transform
+    for i = 1:num
+        % Pick a random row
+        rowIdx = ceil(rand * size(data,1));
+        % Reshape it to an 28x28 image
+        tmp = reshape(data(rowIdx, :), 28, 28);
+        % Add transformation
+        tform = maketform('affine',[1 0 0; .5 1 0; 0 0 1]);
+        tmp = imtransform(tmp,tform,'bicubic','udata',[0 1],...
+                              'vdata',[0 1],...
+                              'size',size(tmp),...
+                              'fill',0);
+        % Shape it back again
+        res(i + num*2, :) = reshape(tmp, 1, 784);
+    end
     % scale
-    % translate
-    % strech
+    for i = 1:num
+        % Pick a random row
+        rowIdx = ceil(rand * size(data,1));
+        % Reshape it to an 28x28 image
+        tmp = reshape(data(rowIdx, :), 28, 28);
+        % Pick a scale factor
+        scale = (1.2-0.8) * rand + 0.8;
+        % Add transformation
+        imresize(tmp, 'Scale', scale,...
+                      'OutputSize', [28 28],...
+                      'method', 'bicubic');
+   
+        % Shape it back again
+        res(i + num*3, :) = reshape(tmp, 1, 784);
+    end    
 end
 
 function res = getDist(count, numLabels, needed)
