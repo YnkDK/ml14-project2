@@ -38,6 +38,9 @@ function [newData, newLabel] = genData(data, labels, newSize)
 end
 
 function res = genDataForLabel(newData, data)
+    numDim = size(data, 2);
+    dim = sqrt(numDim);
+    
     % Initialize the random number generator
     rng(0,'twister');
     
@@ -50,52 +53,53 @@ function res = genDataForLabel(newData, data)
     for i = 1:num
         % Pick a random row
         rowIdx = ceil(rand * size(data,1));
-        % Reshape it to an 28x28 image
-        tmp = reshape(data(rowIdx, :), 28, 28);
+        % Reshape it to an dimxdim image
+        tmp = reshape(data(rowIdx, :), dim, dim);
         % Add noise and shape it back again
-        res(i, :) = reshape(imnoise(tmp, 'localvar', tmp), 1, 784);
+        noise = imnoise(tmp, 'localvar', tmp);
+        res(i, :) = reshape(noise, 1, numDim);
     end
     % rotate
     for i = 1:num
         % Pick a random row
         rowIdx = ceil(rand * size(data,1));
-        % Reshape it to an 28x28 image
-        tmp = reshape(data(rowIdx, :), 28, 28);
+        % Reshape it to an dimxdim image
+        tmp = reshape(data(rowIdx, :), dim, dim);
         % Pick an angle between -40 and 40 degrees
-        deg = 80 * rand - 40;
+        deg = 30 * rand - 15;
         % Add rotate and shape it back again
-        res(i + num, :) = reshape(imrotate(tmp, deg, 'bilinear', 'crop'), 1, 784);
+        res(i + num, :) = reshape(imrotate(tmp, deg, 'bilinear', 'crop'), 1, numDim);
     end
     % transform
     tform = maketform('affine',[1 0 0; .5 1 0; 0 0 1]);
     for i = 1:num
         % Pick a random row
         rowIdx = ceil(rand * size(data,1));
-        % Reshape it to an 28x28 image
-        tmp = reshape(data(rowIdx, :), 28, 28);
+        % Reshape it to an dimxdim image
+        tmp = reshape(data(rowIdx, :), dim, dim);
         % Add transformation       
         tmp = imtransform(tmp,tform,'bicubic','udata',[0 1],...
                               'vdata',[0 1],...
                               'size',size(tmp),...
                               'fill',0);
         % Shape it back again
-        res(i + num*2, :) = reshape(tmp, 1, 784);
+        res(i + num*2, :) = reshape(tmp, 1, numDim);
     end
     % scale
     for i = 1:(newData - 3*num)
         % Pick a random row
         rowIdx = ceil(rand * size(data,1));
-        % Reshape it to an 28x28 image
-        tmp = reshape(data(rowIdx, :), 28, 28);
+        % Reshape it to an dimxdim image
+        tmp = reshape(data(rowIdx, :), dim, dim);
         % Pick a scale factor
-        scale = (1.2-0.8) * rand + 0.8;
+        scale = (1.1-0.9) * rand + 0.9;
         % Add transformation
         imresize(tmp, 'Scale', scale,...
-                      'OutputSize', [28 28],...
+                      'OutputSize', [dim dim],...
                       'method', 'bicubic');
    
         % Shape it back again
-        res(i + num*3, :) = reshape(tmp, 1, 784);
+        res(i + num*3, :) = reshape(tmp, 1, numDim);
     end    
 end
 

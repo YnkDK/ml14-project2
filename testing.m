@@ -2,7 +2,7 @@
 %  STEP 0: Here we provide the relevant parameters values that will
 %  allow your sparse autoencoder to get good filters; 
 % inputSize  = 28 * 28;
-inputSize  = 28*28;
+inputSize  = 22*22;
 numLabels  = 5;
 hiddenSize = 200;
 sparsityParam = 0.1; % desired average activation of the hidden units.
@@ -20,19 +20,20 @@ maxIter = 400;
 %  change it.
 
 % Load MNIST database files
-%trainDat = load('mnistTrain.mat');
-%mnistData   = trainDat.images;
-%mnistLabels = trainDat.labels;
+trainDat = load('mnistTrain.mat');
+mnistData   = trainDat.images;
+mnistLabels = trainDat.labels;
 
 % Load AU database files
-trainDat    = load('auTrain.mat');
-mnistData   = trainDat.au_train_digits;
-mnistLabels = trainDat.au_train_labels;
+%trainDat    = load('auTrain.mat');
+%mnistData   = trainDat.au_train_digits;
+%mnistLabels = trainDat.au_train_labels;
 
-[mnistData,mnistLabels] = genData(mnistData, mnistLabels, length(mnistData)*2 );
+
+[mnistData,mnistLabels] = genData(mnistData, mnistLabels, ceil(length(mnistData)*1.3) );
 disp('done generating data');
-%mnistData  = dimReduce(mnistData,inputSize);
-%disp('done reducing data');
+mnistData  = dimReduce(mnistData,inputSize);
+disp('done reducing data');
 % 
 % images  =mnistData;
 % labels = mnistLabels;
