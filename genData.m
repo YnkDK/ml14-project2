@@ -8,23 +8,25 @@ function [newData, newLabel] = genData(data, labels, newSize)
         warning('data size (%d) smaller than new size (%d), returning input data', length(data), newSize);
         return;
     end
-    tmp = data;
-    newLabel = labels;
+    newData = zeros(newSize, size(data, 2));
+    newData(1 : length(data), :) = data;
+    newLabel = zeros(newSize, 1);
+    newLabel(1 : length(data), :) = labels;
     % Try to distribute the new data, such that the count
     % of each label is (almost) equal
     [count,label] = hist(labels, unique(labels));
     distribution = getDist(count, length(label), needed);
+    idx = length(data);
     for i = 1:length(label)
         if(distribution(i) == 0)
             continue;
         end
-        newData = genDataForLabel(distribution(i), data(labels(:) == (i-1), :));
-        tmp = [tmp ; newData];
-        newLabel = [newLabel ; repmat(label(i), distribution(i), 1)];
+        nd = genDataForLabel(distribution(i), data(labels(:) == (i-1), :));
+        disp(idx + 1);
+        newData(idx + 1 : idx + distribution(i), :) = nd;
+        newLabel(idx + 1 : idx + distribution(i), :) = repmat(label(i), distribution(i), 1);
+        idx = idx + distribution(i);
     end
-    subplot(1,2,1), imshow(reshape(tmp(10000, :), 28, 28))
-    subplot(1,2,2), imshow(reshape(tmp(10001, :), 28, 28));
-    newData = tmp;
 end
 
 function res = genDataForLabel(newData, data)
@@ -72,7 +74,7 @@ function res = genDataForLabel(newData, data)
         res(i + num*2, :) = reshape(tmp, 1, 784);
     end
     % scale
-    for i = 1:num
+    for i = 1:(newData - 3*num)
         % Pick a random row
         rowIdx = ceil(rand * size(data,1));
         % Reshape it to an 28x28 image
