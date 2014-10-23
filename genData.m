@@ -57,13 +57,13 @@ function res = genDataForLabel(newData, data)
         res(i + num, :) = reshape(imrotate(tmp, deg, 'bilinear', 'crop'), 1, 784);
     end
     % transform
+    tform = maketform('affine',[1 0 0; .5 1 0; 0 0 1]);
     for i = 1:num
         % Pick a random row
         rowIdx = ceil(rand * size(data,1));
         % Reshape it to an 28x28 image
         tmp = reshape(data(rowIdx, :), 28, 28);
-        % Add transformation
-        tform = maketform('affine',[1 0 0; .5 1 0; 0 0 1]);
+        % Add transformation       
         tmp = imtransform(tmp,tform,'bicubic','udata',[0 1],...
                               'vdata',[0 1],...
                               'size',size(tmp),...
