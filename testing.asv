@@ -2,7 +2,7 @@
 %  STEP 0: Here we provide the relevant parameters values that will
 %  allow your sparse autoencoder to get good filters; 
 % inputSize  = 28 * 28;
-inputSize  = 19*25;
+inputSize  = 28*28;
 numLabels  = 5;
 hiddenSize = 200;
 sparsityParam = 0.1; % desired average activation of the hidden units.
@@ -24,10 +24,11 @@ trainDat = load('mnistTrain.mat');
 mnistData   = trainDat.images;
 mnistLabels = trainDat.labels;
 
-mnistData  = dimReduce(mnistData,inputSize);
-
+% mnistData  = dimReduce(mnistData,inputSize);
+[mnistData,mnistLabels] = genData(mnistData, mnistLabels, 60000*2 );
+save('gen.mat', );
 % Set Unlabeled Set (All Images)
-
+disp('done generating data');
 % Simulate a Labeled and Unlabeled set
 labeledSet   = find(mnistLabels >= 0 & mnistLabels <= 4);
 unlabeledSet = find(mnistLabels >= 5);
@@ -44,6 +45,9 @@ trainLabels = mnistLabels(trainSet)' + 1; % Shift Labels to the Range 1-5
 testData   = mnistData(testSet,:);
 testLabels = mnistLabels(testSet)' + 1;   % Shift Labels to the Range 1-5
 
+
+addpath svm/
+% svmtrain....;
 
 
 %% ======================================================================
