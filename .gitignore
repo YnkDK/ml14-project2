@@ -4,3 +4,5 @@ minFunc/logistic/*
 *.dll
 *.exe
 *.mexa64
+*~
+*.asv
