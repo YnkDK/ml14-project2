@@ -22,7 +22,6 @@ function [newData, newLabel] = genData(data, labels, newSize)
             continue;
         end
         nd = genDataForLabel(distribution(i), data(labels(:) == (i-1), :));
-        disp(idx + 1);
         newData(idx + 1 : idx + distribution(i), :) = nd;
         newLabel(idx + 1 : idx + distribution(i), :) = repmat(label(i), distribution(i), 1);
         idx = idx + distribution(i);
