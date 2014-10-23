@@ -4,5 +4,7 @@ function newData = dimReduce( inValues, reduceTo )
 [coeff, score, ~] = princomp(inValues);
 ndim = reduceTo; %new dim size ?
 newData = score(:,1:ndim)*coeff(1:ndim,1:ndim)';
+minVal  = abs(min(min( newData)));
+newData = newData + minVal;
 end
 
