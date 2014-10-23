@@ -29,18 +29,13 @@ mnistLabels = trainDat.labels;
 %mnistData   = trainDat.au_train_digits;
 %mnistLabels = trainDat.au_train_labels;
 
-<<<<<<< HEAD
-% [mnistData,mnistLabels] = genData(mnistData, mnistLabels, length(mnistData) );
-disp('done generating data');
-mnistData  = dimReduce(mnistData,inputSize);
-%disp('done reducing data');
-=======
+
 
 [mnistData,mnistLabels] = genData(mnistData, mnistLabels, ceil(length(mnistData)*1.3) );
 disp('done generating data');
 mnistData  = dimReduce(mnistData,inputSize);
 disp('done reducing data');
->>>>>>> origin/master
+
 % 
 % images  =mnistData;
 % labels = mnistLabels;
