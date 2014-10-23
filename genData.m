@@ -8,22 +8,31 @@ function [newData, newLabel] = genData(data, labels, newSize)
         warning('data size (%d) smaller than new size (%d), returning input data', length(data), newSize);
         return;
     end
+    % Pre-allocate new data
     newData = zeros(newSize, size(data, 2));
-    newData(1 : length(data), :) = data;
     newLabel = zeros(newSize, 1);
+    % Insert 'old' data
+    newData(1 : length(data), :) = data;
     newLabel(1 : length(data), :) = labels;
     % Try to distribute the new data, such that the count
     % of each label is (almost) equal
     [count,label] = hist(labels, unique(labels));
+    % Get the number of each class to be generated
     distribution = getDist(count, length(label), needed);
+    % Index for first newly generated data
     idx = length(data);
     for i = 1:length(label)
+        % If we should not add any for this class, skip it
         if(distribution(i) == 0)
             continue;
         end
+        % Generate new data for class i
         nd = genDataForLabel(distribution(i), data(labels(:) == (i-1), :));
+        % Insert new data to result
         newData(idx + 1 : idx + distribution(i), :) = nd;
+        % Insert the required number of labels
         newLabel(idx + 1 : idx + distribution(i), :) = repmat(label(i), distribution(i), 1);
+        % Update index
         idx = idx + distribution(i);
     end
 end
@@ -33,7 +42,7 @@ function res = genDataForLabel(newData, data)
     rng(0,'twister');
     
     res = zeros(newData, size(data, 2));
-    % We have 6 image manipulators
+    % We have 4 image manipulators
     % Calculate how many each should generate
     num = floor(newData / 4);
     
@@ -91,33 +100,47 @@ function res = genDataForLabel(newData, data)
 end
 
 function res = getDist(count, numLabels, needed)
+    % The number of each class to be generated
+    % such that they are equally many
     even = (max(count)-count);
     if(sum(even) < needed)
+        % We still need more data
         need = needed - sum(even);
+        % Evenly distribute the rest among all classes
         even = even + floor(need/numLabels);
     elseif(sum(even) > needed)
+        % We cannot make it even distributed
         need = sum(even) - needed;
+        % Substract the exess from each class
         even = even - floor(need/numLabels);
         [m, i] = min(even);
         while(m < 0)
+           % While we still need to generate negative numbers
            m = ceil(-m/(numLabels - sum(even == 0)));
+           % Set the negative value to 0
            even(i) = 0;
            for n = 1:numLabels
-              if(n == i || even(n) == 0)
+              % Do not substract anything if it is already 0
+              if(even(n) == 0)
                   continue;
               end
+              % Even the fraction of the exess for class n
               even(n) = even(n) - m;
            end
+           % Find the new min
            [m, i] = min(even);
         end
     end
-    if(sum(even) < needed) 
+    if(sum(even) < needed)
+        % We might still need a few more
         [m, i] = min(even);
         even(i) = m + (needed - sum(even));
     elseif(sum(even) > needed)
+        % We might have generated to many
         surplus = sum(even) - needed;
         [m, i] = max(even);
         even(i) = m - surplus;
     end
+    % Update res
     res = even;
 end
