@@ -1,0 +1,9 @@
+function [ model ] = bestRBF( data, labels )
+%BESTRBF Summary of this function goes here
+%   Detailed explanation goes here
+model = svmtrain(...
+    labels,...
+    data,...
+    '-c 45');
+end
+
