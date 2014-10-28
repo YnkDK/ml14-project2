@@ -1,14 +1,14 @@
 % Make SVMlib available
 addpath svm/
 
-trainDat = load('mnistTrain.mat');
-data   = trainDat.images;
-labels= trainDat.labels;
+%trainDat = load('mnistTrain.mat');
+%data   = trainDat.images;
+%labels= trainDat.labels;
 
 % Load AU database files
-%trainDat    = load('auTrain.mat');
-%data   = trainDat.au_train_digits;
-%labels = trainDat.au_train_labels;
+trainDat    = load('auTrain.mat');
+data   = trainDat.au_train_digits;
+labels = trainDat.au_train_labels;
 
 % Split into a train and test set
 numTrain = round(3*numel(labels)/4);
