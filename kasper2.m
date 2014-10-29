@@ -57,7 +57,7 @@ input('.. click to continue   ..');
 disp('============ RBF ===============');
 % Train
 tic;
-model = BestRBF(trainData, trainLabels);
+model = BestRBFK(trainData, trainLabels);
 toc;
 disp('done training, predicting');
 % Test
