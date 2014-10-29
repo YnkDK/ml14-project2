@@ -9,7 +9,7 @@ function [ model ] = BestRun( data, labels, fncText)
     [C,gamma] = meshgrid(-5:5:15, (nf-12):6:(nf+12));
 
     %# grid search, and cross-validation
-    coarseAcc = zeros(25,1);
+    coarseAcc = zeros(numel(C),1);
     parfor (i=1:numel(C))
         coarseAcc(i) = svmtrain(labels, data, ...
                         sprintf(fncText, 2^C(i), 2^gamma(i), folds));
@@ -29,9 +29,9 @@ function [ model ] = BestRun( data, labels, fncText)
     bestC = C(idx);
     bestG = gamma(idx);
     [Cf,gammaf] = meshgrid((bestC-1):0.5:(bestC+1), (bestG-0.75):0.5:(bestG+0.75));
-    fineAcc = zeros(20,1);
-    parfor (i = 1:numel(Cf), 4)
-        fineAcc(i+25) = svmtrain(labels, data, ...
+    fineAcc = zeros(numel(C),1);
+    parfor (i = 1:numel(Cf))
+        fineAcc(i) = svmtrain(labels, data, ...
                         sprintf(fncText, 2^Cf(i), 2^gammaf(i), folds));
     end
     [~,idx] = max(fineAcc);
