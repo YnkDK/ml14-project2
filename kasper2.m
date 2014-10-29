@@ -28,17 +28,17 @@ disp('done generating and reducing data');
 %'-t 1 -g 0.2 -c 45 -d 3'  polynomial
 %'-t 1 -c 150 -d 2 -v 10'  polynomial 
 % Train
-i = 250; %35 is so far the best found. 
-while i < 500
+i = 45; %35 is so far the best found. 
+while i < 80
 tic;
 fprintf(strcat('I :', num2str(i),'\r\n')); 
 
-parms =sprintf('-t 1 -c %d  -d 2 -v 10 -q', i);
+parms =sprintf('-t 0 -c %d  -d 2 -v 10 -q', i);
 disp(parms);
 model = svmtrain(labels, data,parms );
 fprintf('\r\n'); 
 toc;
-i = i+5;
+i = i+1;
 end
 % Test
 % [predicted_label, accuracy, dp] = svmpredict(testLabels, testData, model);
