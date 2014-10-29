@@ -1,7 +1,4 @@
-%% ======================================================================
-%  STEP 0: Here we provide the relevant parameters values that will
-%  allow your sparse autoencoder to get good filters; 
-% inputSize  = 28 * 28;
+
 inputSize  = 25*25;
 numLabels  = 5;
 hiddenSize = 200;
@@ -12,23 +9,6 @@ lambda = 3e-3;       % weight decay parameter
 beta = 3;            % weight of sparsity penalty term   
 maxIter = 400;
 
-%% ======================================================================
-%  STEP 1: Load data from the MNIST database
-%
-%  This loads our training and test data from the MNIST database files.
-%  We have sorted the data for you in this so that you will not have to
-%  change it.
-
-% Load MNIST database files
-% trainDat = load('mnistTrain.mat');
-% mnistData   = trainDat.images;
-% mnistLabels = trainDat.labels;
-
-% trainDat = load('gen.mat');
-% mnistData   = trainDat.images;
-% mnistLabels = trainDat.labels;
-
-% Load AU database files
 trainDat    = load('auTrain.mat');
 mnistData   = trainDat.au_train_digits;
 mnistLabels = trainDat.au_train_labels;
@@ -64,7 +44,6 @@ testData   = mnistData(testSet,:);
 testLabels = mnistLabels(testSet)' + 1;   % Shift Labels to the Range 1-5
 
 
-addpath svm/
 % svmtrain....;
 
 

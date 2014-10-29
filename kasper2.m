@@ -10,11 +10,11 @@ data   = trainDat.au_train_digits;
 labels = trainDat.au_train_labels;
 
 % Generate more data
-[data,labels] = genData(data, labels, ceil(length(data)*1.3) );
+% [data,labels] = genData(data, labels, ceil(length(data)*1.3) );
 disp('done generating data');
 input('.. continue ? ..');
 % Reduce dimensions
-data  = dimReduce(data,25*25);
+data  = dimReduce(data,21*21);
 disp('done reducing data');
 % Scramble data
 idx = randperm(numel(labels))';
@@ -32,7 +32,7 @@ disp('Starting training');
 disp('============ LINEAR ===============');
 % Train
 tic;
-model = BestLin(trainData, trainLabels);
+model = bestLin(trainData, trainLabels);
 toc;
 disp('done training, predicting');
 % Test

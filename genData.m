@@ -42,8 +42,8 @@ function res = genDataForLabel(newData, data)
     dim = sqrt(numDim);
     
     % Initialize the random number generator
-    rng(0,'twister');
-    
+      rng(0,'twister');
+%     rand('state',0);
     res = zeros(newData, size(data, 2));
     % We have 4 image manipulators
     % Calculate how many each should generate

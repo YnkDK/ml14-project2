@@ -12,7 +12,7 @@ function [ model ] = BestRun( data, labels, fncText)
     coarseAcc = zeros(numel(C),1);
     parfor (i=1:numel(C))
         coarseAcc(i) = svmtrain(labels, data, ...
-                        sprintf(fncText, 2^C(i), 2^gamma(i), folds));
+                        sprintf('%s -c %f -g %f -v %d -m 512',fncText, 2^C(i), 2^gamma(i), folds));
     end
     %# pair (C,gamma) with best accuracy
     [~,idx] = max(coarseAcc);
@@ -25,14 +25,14 @@ function [ model ] = BestRun( data, labels, fncText)
         'HorizontalAlign','left', 'VerticalAlign','top')
     hold off
     xlabel('log_2(C)'), ylabel('log_2(\gamma)'), title('Cross-Validation Accuracy with coarse grid-search')
-    
+    input('graph 1 completed, continue ? ');
     bestC = C(idx);
     bestG = gamma(idx);
     [Cf,gammaf] = meshgrid((bestC-1):0.5:(bestC+1), (bestG-0.75):0.5:(bestG+0.75));
     fineAcc = zeros(numel(Cf),1);
     parfor (i = 1:numel(Cf))
         fineAcc(i) = svmtrain(labels, data, ...
-                        sprintf(fncText, 2^Cf(i), 2^gammaf(i), folds));
+                        sprintf('%s -c %f -g %f -v %d -m 512',fncText, 2^Cf(i), 2^gammaf(i), folds));
     end
     [~,idx] = max(fineAcc);
     fprintf('--------------------\nBest C-value: 2^%d\nBest gamma-value: 2^%d\n--------------------\n', Cf(idx), gammaf(idx));
@@ -47,8 +47,9 @@ function [ model ] = BestRun( data, labels, fncText)
     xlabel('log_2(C)'), ylabel('log_2(\gamma)'), title('Cross-Validation Accuracy with fine grid-search')
     % Retrain the model without cross validation - but with the best
     % parameters
+    
     model = svmtrain(labels, data, ...
-                     sprintf(fncText, 2^Cf(idx), 2^gammaf(idx)));
+                     sprintf('%s -c %f -g %f -m 512',fncText, 2^Cf(idx), 2^gammaf(idx))); %to solve the cross fold problem
     fprintf('--------------------\nBest C-value: 2^%d\nBest gamma-value: 2^%d\n--------------------\n', Cf(idx), gammaf(idx));
 %     fprintf('--------------------\nBest C-value: 2^%d\nBest gamma-value: 2^%d\n--------------------\n', Cf(idx), gammaf(idx));
 %     fprintf('--------------------\nBest C-value: 2^%d\nBest gamma-value: 2^%d\n--------------------\n', Cf(idx), gammaf(idx));
