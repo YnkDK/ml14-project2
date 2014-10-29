@@ -29,7 +29,7 @@ function [ model ] = BestRun( data, labels, fncText)
     bestC = C(idx);
     bestG = gamma(idx);
     [Cf,gammaf] = meshgrid((bestC-1):0.5:(bestC+1), (bestG-0.75):0.5:(bestG+0.75));
-    fineAcc = zeros(numel(C),1);
+    fineAcc = zeros(numel(Cf),1);
     parfor (i = 1:numel(Cf))
         fineAcc(i) = svmtrain(labels, data, ...
                         sprintf(fncText, 2^Cf(i), 2^gammaf(i), folds));
