@@ -11,8 +11,10 @@ function [ model ] = BestRun( data, labels, fncText)
     %# grid search, and cross-validation
     coarseAcc = zeros(numel(C),1);
     parfor (i=1:numel(C))
+        tic;
         coarseAcc(i) = svmtrain(labels, data, ...
                         sprintf('%s -c %f -g %f -v %d -m 512',fncText, 2^C(i), 2^gamma(i), folds));
+        toc;
     end
     %# pair (C,gamma) with best accuracy
     [~,idx] = max(coarseAcc);

@@ -1,3 +1,4 @@
+% Make SVMlib available
 addpath svm/
 
 %trainDat = load('mnistTrain.mat');
@@ -10,11 +11,10 @@ data   = trainDat.au_train_digits;
 labels = trainDat.au_train_labels;
 
 % Generate more data
-% [data,labels] = genData(data, labels, ceil(length(data)*1.3) );
+[data,labels] = genData(data, labels, ceil(length(data)*1.3) );
 disp('done generating data');
-input('.. continue ? ..');
 % Reduce dimensions
-data  = dimReduce(data,21*21);
+data  = dimReduce(data,25*25);
 disp('done reducing data');
 % Scramble data
 idx = randperm(numel(labels))';
@@ -27,25 +27,26 @@ trainLabels = labels(idx(1:numTrain)); % Shift Labels to the Range 1-5
 
 testData   = data(idx(numTrain+1:end),:);
 testLabels = labels(idx(numTrain+1:end));   % Shift Labels to the Range 1-5
+disp('Ready to train...');
 disp('Starting training');
 
 disp('============ LINEAR ===============');
 % Train
 tic;
-model = bestLin(trainData, trainLabels);
+%  model = bestLin(trainData, trainLabels);
 toc;
-disp('done training, predicting');
+% disp('done training, predicting');
 % Test
-[predicted_label, accuracy, dp] = svmpredict(testLabels, testData, model);
+%  [predicted_label, accuracy, dp] = svmpredict(testLabels, testData, model);
 
 % Classification Score
-fprintf('Test Accuracy: %f%%\n', accuracy);
+%  fprintf('Test Accuracy: %f%%\n', accuracy);
 
-input('.. click to continue  ..');
+% input('.. click to continue  ..');
 disp('============ POLYNOMIAL ===============');
 % Train
 tic;
-model = BestPoly(trainData, trainLabels);
+model = bestPolyN(trainData, trainLabels);
 toc;
 disp('done training, predicting');
 % Test
@@ -57,7 +58,7 @@ input('.. click to continue   ..');
 disp('============ RBF ===============');
 % Train
 tic;
-model = BestRBFK(trainData, trainLabels);
+model = bestRBFK(trainData, trainLabels);
 toc;
 disp('done training, predicting');
 % Test
@@ -65,3 +66,4 @@ disp('done training, predicting');
 
 % Classification Score
 fprintf('Test Accuracy: %f%%\n', accuracy);
+disp('DONE');
