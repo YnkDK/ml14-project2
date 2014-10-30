@@ -32,15 +32,15 @@ disp('Starting training');
 
 disp('============ LINEAR ===============');
 % Train
-tic;
-  model = bestLin(trainData, trainLabels);
-toc;
-% disp('done training, predicting');
+ tic;
+   model = bestLin(trainData, trainLabels);
+ toc;
+ disp('done training, predicting');
 % Test
-%   [predicted_label, accuracy, dp] = svmpredict(testLabels, testData, model);
+   [predicted_label, accuracy, dp] = svmpredict(testLabels, testData, model);
 
 % Classification Score
-%  fprintf('Test Accuracy: %f%%\n', accuracy);
+  fprintf('Test Accuracy: %f%%\n', accuracy);
 
 % input('.. click to continue  ..');
 disp('============ POLYNOMIAL ===============');
@@ -54,7 +54,6 @@ disp('done training, predicting');
 
 % Classification Score
 fprintf('Test Accuracy: %f%%\n', accuracy);
-input('.. click to continue   ..');
 disp('============ RBF ===============');
 % Train
 tic;

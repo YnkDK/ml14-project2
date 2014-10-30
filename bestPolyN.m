@@ -28,7 +28,7 @@ function [ model ] = bestPolyN( data, labels)
         'HorizontalAlign','left', 'VerticalAlign','top')
     hold off
     xlabel('log_2(C)'), ylabel('degree'), title('Cross-Validation Accuracy with coarse grid-search');
-    input('graph 1 completed, continue ? ');
+%     input('graph 1 completed, continue ? ');
     bestC = C(idx);
     bestG = degree(idx);
     [Cf,degreef] = meshgrid((bestC-1):0.5:(bestC+1), (bestG-1):1:(bestG+1));
