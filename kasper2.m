@@ -14,7 +14,9 @@ labels = trainDat.au_train_labels;
 [data,labels] = genData(data, labels, ceil(length(data)*1.3) );
 disp('done generating data');
 % Reduce dimensions
-data  = dimReduce(data,22*22);
+% data  = dimReduce(data,22*22);
+
+
 disp('done reducing data');
 % Scramble data
 idx = randperm(numel(labels))';
@@ -33,11 +35,11 @@ disp('Starting training');
 disp('============ LINEAR ===============');
 % Train
  tic;
-   model = bestLin(trainData, trainLabels);
+%    model = bestLin(trainData, trainLabels);
  toc;
  disp('done training, predicting');
 % Test
-   [predicted_label, accuracy, dp] = svmpredict(testLabels, testData, model);
+%    [predicted_label, accuracy, dp] = svmpredict(testLabels, testData, model);
 
 % Classification Score
   fprintf('Test Accuracy: %f%%\n', accuracy);
@@ -46,11 +48,11 @@ disp('============ LINEAR ===============');
 disp('============ POLYNOMIAL ===============');
 % Train
 tic;
-model = bestPolyN(trainData, trainLabels);
+% model = bestPolyN(trainData, trainLabels);
 toc;
 disp('done training, predicting');
 % Test
-[predicted_label, accuracy, dp] = svmpredict(testLabels, testData, model);
+% [predicted_label, accuracy, dp] = svmpredict(testLabels, testData, model);
 
 % Classification Score
 fprintf('Test Accuracy: %f%%\n', accuracy);
