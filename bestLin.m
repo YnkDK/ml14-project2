@@ -17,6 +17,7 @@ function [ model ] = bestLin( data, labels )
     %# pair (C,gamma) with best accuracy
     [~,idx] = max(coarseAcc);
     %# plot of paramter selection
+    figure('Name','Coarse plot','NumberTitle','On')
     plot(C,coarseAcc)
     hold on
     plot(C(idx), coarseAcc(idx), 'rx')
@@ -24,7 +25,7 @@ function [ model ] = bestLin( data, labels )
         'HorizontalAlign','left', 'VerticalAlign','top')
     hold off
     xlabel('log_2(C)'), ylabel('Accuracy'), title('Cross-Validation Accuracy with coarse grid-search')
-    input('plot done. Continue?');
+%     input('plot done. Continue?');
     bestC = C(idx);
     Cf =(bestC-2):0.5:(bestC+2);
     fineAcc = zeros(numel(Cf),1);
@@ -34,7 +35,7 @@ function [ model ] = bestLin( data, labels )
     end
 %     matlabpool('close');
     [~,idx] = max(fineAcc);
-    
+    figure('Name','Fine plot','NumberTitle','On')
     %# plot of paramter selection
     plot(Cf,fineAcc)
     hold on
@@ -47,6 +48,6 @@ function [ model ] = bestLin( data, labels )
     % parameters
     model = svmtrain(labels, data, ...
                      sprintf('-q -c %f -m 512', 2^Cf(idx)));
-
+    input('asd');
 end
 

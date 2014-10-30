@@ -16,6 +16,7 @@ function [ model ] = BestRun( data, labels, fncText)
                         sprintf('%s -c %f -g %f -v %d -m 512',fncText, 2^C(i), 2^gamma(i), folds));
         toc;
     end
+     figure('Name','Coarse plot','NumberTitle','On')
     %# pair (C,gamma) with best accuracy
     [~,idx] = max(coarseAcc);
     fprintf('--------------------\nBest C-value: 2^%d\nBest gamma-value: 2^%d\n--------------------\n', C(idx), gamma(idx));
@@ -27,7 +28,6 @@ function [ model ] = BestRun( data, labels, fncText)
         'HorizontalAlign','left', 'VerticalAlign','top')
     hold off
     xlabel('log_2(C)'), ylabel('log_2(\gamma)'), title('Cross-Validation Accuracy with coarse grid-search')
-    input('graph 1 completed, continue ? ');
     bestC = C(idx);
     bestG = gamma(idx);
     [Cf,gammaf] = meshgrid((bestC-1):0.5:(bestC+1), (bestG-0.75):0.5:(bestG+0.75));
@@ -38,7 +38,7 @@ function [ model ] = BestRun( data, labels, fncText)
     end
     [~,idx] = max(fineAcc);
     fprintf('--------------------\nBest C-value: 2^%d\nBest gamma-value: 2^%d\n--------------------\n', Cf(idx), gammaf(idx));
-    
+     figure('Name','Fine plot','NumberTitle','On')
     %# contour plot of paramter selection
     contour(Cf, gammaf, reshape(fineAcc,size(Cf))), colorbar
     hold on

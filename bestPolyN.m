@@ -18,6 +18,7 @@ function [ model ] = bestPolyN( data, labels)
     end
     %# pair (C,degree) with best accuracy
     [~,idx] = max(coarseAcc);
+     figure('Name','Coarse plot','NumberTitle','On');
     fprintf('--------------------\nBest C-value: 2^%d\nBest degree: %d\n--------------------\n', C(idx), degree(idx));
     %# contour plot of paramter selection
     contour(C, degree, reshape(coarseAcc,size(C))), colorbar
@@ -36,6 +37,7 @@ function [ model ] = bestPolyN( data, labels)
         fineAcc(i) = svmtrain(labels, data, ...
                         sprintf('%s -c %f -d %f -v %d -m 512',fncText, 2^Cf(i), degreef(i), folds));
     end
+     figure('Name','Fine plot','NumberTitle','On');
     [~,idx] = max(fineAcc);
     fprintf('--------------------\nBest C-value: 2^%d\nBest degree: 2^%d\n--------------------\n', Cf(idx), degreef(idx));
     
